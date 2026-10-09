@@ -30,6 +30,7 @@ export function normalize(r: any): Product | null {
   const pct = Number(first(r.discount, r.discountPercent, r.discountPercentage) ?? 0);
   if (!old && pct > 0 && price) old = Math.round(price / (1 - pct / 100));
   const image = mediaUrl(first(r.image, r.images?.[0], r.photos?.[0], r.media?.[0], r.thumbnail));
+  if (r.active === false) return null; // hidden in your store
   if (!id || !price || !image) return null;
   return {
     id, price, image,
@@ -54,10 +55,10 @@ export async function getProducts(): Promise<Product[]> {
 }
 
 // Stateless daily pick. Posts at least MIN_PER_DAY a day, and enough per day that every
-// product is posted again within 7 days. Products added in the last 7 days go first.
+// product is posted again within 7 days. Products added in the last 2 days go first.
 export function pickForDay(products: Product[], now = Date.now()): Product[] {
   const count = Math.min(MAX_PER_DAY, Math.max(MIN_PER_DAY, Math.ceil(products.length / 7)), products.length);
-  const fresh = products.filter((p) => p.createdAt && now - +new Date(p.createdAt) < 7 * 864e5);
+  const fresh = products.filter((p) => p.createdAt && now - +new Date(p.createdAt) < 2 * 864e5);
   const rest = products.filter((p) => !fresh.includes(p)).sort((a, b) => a.id.localeCompare(b.id));
   const out: Product[] = fresh.slice(0, count);
   const day = Math.floor(now / 864e5);
