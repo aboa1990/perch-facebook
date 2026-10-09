@@ -3,8 +3,8 @@
 Every morning (07:00 Maldives time) a Vercel cron picks today's products, writes a caption with Claude,
 renders a 1080x1350 branded image, and schedules the posts on your Facebook Page (10:00 to 20:00).
 - At least 2 posts a day, and enough per day that every in-stock product is posted again within 7 days.
-- New products (createdAt in the last 7 days) go first.
-- The post design (layout + colours) changes every week automatically. Edit lib/config.ts to change the palettes.
+- New products (added in the last 2 days) go first.
+- The post design (layout + colours) changes every week automatically (3 layouts x 5 colour sets). Edit lib/config.ts for colours and lib/layouts.tsx for the layouts. Fonts live in public/fonts.
 - Scheduled posts show in Meta Business Suite under Planned, so you can review, edit or delete any before it goes out.
 
 ## Setup
