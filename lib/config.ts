@@ -3,6 +3,9 @@ export const MIN_PER_DAY = 2;       // always at least this many posts a day
 export const TZ_OFFSET_HOURS = 5;   // Maldives is UTC+5
 export const FIRST_POST_HOUR = 10;  // local time of the first post of the day
 export const LAST_POST_HOUR = 20;   // local time of the last post of the day
+export const NEW_FIRST_DAYS = 0;    // 0 = new products are posted instantly by /api/post-product, so the daily job doesn't repeat them
+export const QUIET_START = 22;      // new-product posts made between 22:00 and 08:00 local time wait until 09:00
+export const QUIET_END = 8;
 
 // tint: dark overlay behind text. accent: button colour on white cards.
 // sheet / sheetInk: background and text colour of the bottom panel layout.

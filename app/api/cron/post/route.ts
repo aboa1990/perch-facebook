@@ -1,9 +1,8 @@
 import { getProducts, pickForDay } from '@/lib/products';
-import { writeCaption } from '@/lib/caption';
+import { postProduct } from '@/lib/facebook';
 import { FIRST_POST_HOUR, LAST_POST_HOUR, TZ_OFFSET_HOURS } from '@/lib/config';
 
 export const maxDuration = 60;
-const GRAPH = `https://graph.facebook.com/${process.env.GRAPH_VERSION ?? 'v21.0'}`;
 
 // Evenly spread today's posts between FIRST_POST_HOUR and LAST_POST_HOUR (local time).
 function slots(n: number, now = Date.now()) {
@@ -22,16 +21,8 @@ export async function GET(req: Request) {
   const times = slots(picks.length);
   const results = [];
   for (let i = 0; i < picks.length; i++) {
-    const p = picks[i];
-    const body = new URLSearchParams({
-      url: `${origin}/api/render?id=${encodeURIComponent(p.id)}`,
-      caption: await writeCaption(p),
-      published: 'false',
-      scheduled_publish_time: String(Math.floor(times[i] / 1000)),
-      access_token: process.env.FB_PAGE_TOKEN!,
-    });
-    const r = await fetch(`${GRAPH}/${process.env.FB_PAGE_ID}/photos`, { method: 'POST', body });
-    results.push({ product: p.name, scheduledFor: new Date(times[i]).toISOString(), ok: r.ok, response: await r.json() });
+    const r = await postProduct(picks[i], origin, times[i]);
+    results.push({ product: picks[i].name, scheduledFor: new Date(times[i]).toISOString(), ...r });
   }
   return Response.json(results);
 }

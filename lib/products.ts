@@ -1,4 +1,4 @@
-import { MAX_PER_DAY, MIN_PER_DAY } from './config';
+import { MAX_PER_DAY, MIN_PER_DAY, NEW_FIRST_DAYS } from './config';
 
 export type Product = {
   id: string; name: string; brand: string; price: number; oldPrice?: number;
@@ -55,10 +55,10 @@ export async function getProducts(): Promise<Product[]> {
 }
 
 // Stateless daily pick. Posts at least MIN_PER_DAY a day, and enough per day that every
-// product is posted again within 7 days. Products added in the last 2 days go first.
+// product is posted again within 7 days. Optionally, products added in the last NEW_FIRST_DAYS days go first.
 export function pickForDay(products: Product[], now = Date.now()): Product[] {
   const count = Math.min(MAX_PER_DAY, Math.max(MIN_PER_DAY, Math.ceil(products.length / 7)), products.length);
-  const fresh = products.filter((p) => p.createdAt && now - +new Date(p.createdAt) < 2 * 864e5);
+  const fresh = NEW_FIRST_DAYS > 0 ? products.filter((p) => p.createdAt && now - +new Date(p.createdAt) < NEW_FIRST_DAYS * 864e5) : [];
   const rest = products.filter((p) => !fresh.includes(p)).sort((a, b) => a.id.localeCompare(b.id));
   const out: Product[] = fresh.slice(0, count);
   const day = Math.floor(now / 864e5);
