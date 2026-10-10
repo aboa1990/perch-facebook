@@ -5,9 +5,9 @@ import type { Product } from './products';
 const GRAPH = `https://graph.facebook.com/${process.env.GRAPH_VERSION ?? 'v21.0'}`;
 
 // Posts a product photo to the Page. With publishAtMs it is scheduled; without it, it goes live now.
-export async function postProduct(p: Product, origin: string, publishAtMs?: number) {
+export async function postProduct(p: Product, origin: string, publishAtMs?: number, tag?: string) {
   // w and d make the picture address new every day, so an old cached image is never reused
-  const image = `${origin}/api/render?id=${encodeURIComponent(p.id)}&w=${weekIndex()}&d=${Math.floor(Date.now() / 864e5)}`;
+  const image = `${origin}/api/render?id=${encodeURIComponent(p.id)}&w=${weekIndex()}&d=${Math.floor(Date.now() / 864e5)}${tag ? `&tag=${tag}` : ''}`;
   const body = new URLSearchParams({ url: image, caption: await writeCaption(p), access_token: process.env.FB_PAGE_TOKEN! });
   if (publishAtMs) {
     body.set('published', 'false');

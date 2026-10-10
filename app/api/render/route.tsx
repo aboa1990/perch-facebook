@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     const [regular, bold, serif] = await Promise.all([
       font(url.origin, 'dm-sans-400.woff'), font(url.origin, 'dm-sans-700.woff'), font(url.origin, 'fraunces-700.woff'),
     ]);
-    return new ImageResponse(renderPost(p, `${url.origin}/logo-white.png`, w ? Number(w) : undefined), {
+    return new ImageResponse(renderPost(p, `${url.origin}/logo-white.png`, w ? Number(w) : undefined, url.searchParams.get('tag') ?? undefined), {
       width: W, height: H,
       fonts: [
         { name: 'DM Sans', data: regular, weight: 400, style: 'normal' },

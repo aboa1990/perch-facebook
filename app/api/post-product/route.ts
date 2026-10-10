@@ -17,6 +17,6 @@ export async function POST(req: Request) {
 
   const when = nextOpenTime();
   const origin = process.env.APP_URL ?? new URL(req.url).origin;
-  const result = await postProduct(p, origin, when);
+  const result = await postProduct(p, origin, when, 'new');
   return Response.json({ product: p.name, publishAt: when ? new Date(when).toISOString() : 'now', ...result });
 }
