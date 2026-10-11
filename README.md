@@ -19,3 +19,6 @@ renders a 1080x1350 branded image, and schedules the posts on your Facebook Page
 Your store calls `POST /api/post-product` with header `Authorization: Bearer <CRON_SECRET>` and body `{"id":"<product id>"}` right after saving a new product. Between 22:00 and 08:00 Maldives time the post waits until 09:00. Test it with:
 
     Invoke-RestMethod -Method Post -Uri "https://YOUR-PROJECT.vercel.app/api/post-product" -Headers @{Authorization="Bearer YOUR_SECRET"} -ContentType "application/json" -Body '{"id":"PRODUCT_ID"}'
+
+## Post by hand
+Open https://YOUR-PROJECT.vercel.app/admin, enter your secret, and use Post now / Image / Copy caption on any product, or Run today's batch.
