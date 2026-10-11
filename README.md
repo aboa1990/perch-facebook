@@ -21,4 +21,4 @@ Your store calls `POST /api/post-product` with header `Authorization: Bearer <CR
     Invoke-RestMethod -Method Post -Uri "https://YOUR-PROJECT.vercel.app/api/post-product" -Headers @{Authorization="Bearer YOUR_SECRET"} -ContentType "application/json" -Body '{"id":"PRODUCT_ID"}'
 
 ## Post by hand
-Open https://YOUR-PROJECT.vercel.app/admin, enter your secret, and use Post now / Image / Copy caption on any product, or Run today's batch.
+Open https://YOUR-PROJECT.vercel.app/admin, enter your secret, and tap Preview on any product to see the picture and edit the caption, then Copy caption, Download picture or Post this to Facebook. Post now posts with an automatic caption. Run today's batch schedules the day's posts.

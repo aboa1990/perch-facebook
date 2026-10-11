@@ -8,7 +8,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 //   POST /api/post-product   Authorization: Bearer <CRON_SECRET>   body: {"id": "<product id>"}
 export async function POST(req: Request) {
   if (req.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`) return new Response('Unauthorized', { status: 401 });
-  const { id, now } = await req.json().catch(() => ({} as any));
+  const { id, now, caption } = await req.json().catch(() => ({} as any));
   if (!id) return Response.json({ ok: false, error: 'Send {"id": "PRODUCT_ID"}' }, { status: 400 });
 
   let p = (await getProducts()).find((x) => x.id === String(id));
@@ -17,6 +17,6 @@ export async function POST(req: Request) {
 
   const when = now ? undefined : nextOpenTime(); // now:true skips the night-time wait
   const origin = process.env.APP_URL ?? new URL(req.url).origin;
-  const result = await postProduct(p, origin, when, 'new');
+  const result = await postProduct(p, origin, when, 'new', typeof caption === 'string' && caption.trim() ? caption : undefined);
   return Response.json({ product: p.name, publishAt: when ? new Date(when).toISOString() : 'now', ...result });
 }
